@@ -33,7 +33,7 @@ class gSearch(object):
 
 
     def fetch_results(self, search_term):
-        if isinstance(search_term, list):
+        if isinstance(search_term, (list, tuple)):
             escaped_search_term = '+'.join(search_term)
         else:
             escaped_search_term = search_term.replace(' ', '+')
