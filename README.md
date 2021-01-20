@@ -18,7 +18,14 @@ search("Google")
 googlesearch supports a few additional options. By default, googlesearch returns 10 results. This can be changed. To get a 100 results on Google for example, run the following program.
 ```python
 from googlesearch import search
-search("Google", num_results=100)
+search("Google", results_per_page=100)
+
+googleserach also supports pagination. By default, num_results is -1. That will return all available pages.
+
+In this example, num_results=200. That will return results in each page until 200 results are reached, or no more pages are found.
+```python
+from googlesearch import search
+search("Google", results_per_page=100, num_results=200)
 ```
 In addition, you can change the language google searches in. For example, to get results in French run the following program:
 ```python
