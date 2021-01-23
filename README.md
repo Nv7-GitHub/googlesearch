@@ -19,8 +19,9 @@ googlesearch supports a few additional options. By default, googlesearch returns
 ```python
 from googlesearch import search
 search("Google", results_per_page=100)
+```
 
-googleserach also supports pagination. By default, num_results is -1. That will return all available pages.
+googlesearch also supports pagination. By default, num_results is -1. That will return all available pages.
 
 In this example, num_results=200. That will return results in each page until 200 results are reached, or no more pages are found.
 ```python
