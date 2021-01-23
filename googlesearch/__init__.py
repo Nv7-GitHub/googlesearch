@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from itertools import chain
-from typing import Generator
+from typing import Generator, List
 from urllib.parse import urlencode
 
 import attr
@@ -61,8 +61,8 @@ class _PageIter:
                     and not link["href"].startswith("/"):
                 yield link["href"]
 
-    def _search(self) -> list[str]:
-        result = list(
+    def _search(self) -> List[str]:
+        result = List(
             self._parse_results(
                 raw_html=self._fetch_results(
                     search_term=self.search_term,
@@ -81,13 +81,8 @@ class _PageIter:
 
     def __next__(self) -> Page:
         cond = self.start < self.num_results
-        print(f"self.num_results: {self.num_results}")
-        print(f"Cond: {cond}")
-        print(f"self.results_per_page: {self.results_per_page}")
-        print(f"self.start: {self.start}")
         if self.num_results == -1:
             cond = True
-            print(f"FORCED COND: {cond}")
 
         result = self._search()
         if cond and len(result) > 0:
