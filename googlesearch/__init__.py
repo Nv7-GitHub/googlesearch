@@ -18,7 +18,7 @@ _USR_AGENT = {
 @attr.s
 class Page:
     num_page: int = attr.ib(kw_only=True)
-    content: list[str] = attr.ib(kw_only=True)
+    content: List[str] = attr.ib(kw_only=True)
 
 
 @attr.s
@@ -62,7 +62,7 @@ class _PageIter:
                 yield link["href"]
 
     def _search(self) -> List[str]:
-        result = List(
+        result = list(
             self._parse_results(
                 raw_html=self._fetch_results(
                     search_term=self.search_term,
