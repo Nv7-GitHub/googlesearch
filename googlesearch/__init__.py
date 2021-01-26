@@ -2,7 +2,6 @@
 
 from itertools import chain
 from typing import Generator, List
-from urllib.parse import urlencode
 
 import attr
 from bs4 import BeautifulSoup
@@ -35,16 +34,18 @@ class _PageIter:
         language_code: str,
         start: int = 0
             ) -> str:
-        query = urlencode(
-                dict(
-                    q=search_term,
-                    num=results_per_page + 1,
-                    hl=language_code,
-                    start=start
-                )
+
+        google_url = "https://www.google.com/search"
+        response = get(
+            url=google_url,
+            headers=_USR_AGENT,
+            params=dict(
+                q=search_term,
+                num=results_per_page + 1,
+                hl=language_code,
+                start=start
             )
-        google_url = f"https://www.google.com/search?{query}"
-        response = get(google_url, headers=_USR_AGENT)
+        )
         response.raise_for_status()
 
         return response.text
