@@ -1,8 +1,8 @@
-from requests import get
 from bs4 import BeautifulSoup
+from requests import get
 
 
-def search(term, num_results=10, lang="en"):
+def search(term, num_results=10, lang="en", proxy=None):
     usr_agent = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
                       'Chrome/61.0.3163.100 Safari/537.36'}
@@ -12,7 +12,8 @@ def search(term, num_results=10, lang="en"):
 
         google_url = 'https://www.google.com/search?q={}&num={}&hl={}'.format(escaped_search_term, number_results+1,
                                                                               language_code)
-        response = get(google_url, headers=usr_agent)
+        proxies = {"https":proxy} if proxy else None
+        response = get(google_url, headers=usr_agent, proxies=proxies)
         response.raise_for_status()
 
         return response.text
