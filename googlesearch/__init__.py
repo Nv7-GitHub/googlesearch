@@ -12,8 +12,14 @@ def search(term, num_results=10, lang="en", proxy=None):
 
         google_url = 'https://www.google.com/search?q={}&num={}&hl={}'.format(escaped_search_term, number_results+1,
                                                                               language_code)
-        proxies = {"https":proxy} if proxy else None
-        response = get(google_url, headers=usr_agent, proxies=proxies)
+        proxies = None
+        if proxy:
+            if proxy[:5]=="https":
+                proxies = {"https":proxy} 
+            else:
+                proxies = {"http":proxy}
+        
+        response = get(google_url, headers=usr_agent, proxies=proxies)    
         response.raise_for_status()
 
         return response.text
