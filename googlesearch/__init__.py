@@ -24,7 +24,7 @@ def search(term, num_results=10, lang="en"):
             link = result.find('a', href=True)
             title = result.find('h3')
             if link and title:
-                yield link['href']
+                 yield (link['href'],title.text)
 
     html = fetch_results(term, num_results, lang)
     return list(parse_results(html))
