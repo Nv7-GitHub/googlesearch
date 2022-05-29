@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 from requests import get
+from time import sleep
 
 usr_agent = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'}
 
@@ -27,7 +28,7 @@ class SearchResult:
     def __repr__(self):
         return f"SearchResult(url={self.url}, title={self.title}, description={self.description})"
 
-def search(term, num_results=10, lang="en", proxy=None, advanced=False):
+def search(term, num_results=10, lang="en", proxy=None, advanced=False, sleep_interval=0):
     escaped_term = term.replace(' ', '+')
 
     # Proxy
@@ -60,4 +61,5 @@ def search(term, num_results=10, lang="en", proxy=None, advanced=False):
                         yield SearchResult(link['href'], title.text, description.text)
                     else:
                         yield link['href']
+        sleep(sleep_interval)
 
