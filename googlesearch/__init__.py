@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 from requests import get
 
-usr_agent = {
+USER_AGENT = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36"
 }
 
@@ -9,7 +9,7 @@ usr_agent = {
 def _req(term, results, lang, start, proxies):
     resp = get(
         url="https://www.google.com/search",
-        headers=usr_agent,
+        headers=USER_AGENT,
         params=dict(
             q=term,
             num=results + 2,  # Prevents multiple requests
@@ -38,7 +38,7 @@ def search(term, num_results=10, lang="en", proxy=None, advanced=False):
     # Proxy
     proxies = None
     if proxy:
-        if proxy[:5] == "https":
+        if proxy.startswith("https"):
             proxies = {"https": proxy}
         else:
             proxies = {"http": proxy}
