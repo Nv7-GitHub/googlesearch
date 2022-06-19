@@ -17,6 +17,7 @@ def _req(term, results, lang, start, proxies):
             start=start,
         ),
         proxies=proxies,
+        timeout=5 #prevents code from freezing. This is especially useful when using proxies since some proxies may not respond. 
     )
     resp.raise_for_status()
     return resp
