@@ -7,7 +7,9 @@ from user_agents import get_useragent
 def _req(term, results, lang, start, proxies):
     resp = get(
         url="https://www.google.com/search",
-        headers=get_useragent(),
+        headers={
+            "User-Agent": get_useragent()
+        },
         params=dict(
             q=term,
             num=results + 2,  # Prevents multiple requests
