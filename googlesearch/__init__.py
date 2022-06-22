@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 from requests import get
 from time import sleep
-from user_agents import get_useragent
+from .user_agents import get_useragent
 
 
 def _req(term, results, lang, start, proxies):
