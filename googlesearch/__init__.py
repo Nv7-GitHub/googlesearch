@@ -1,16 +1,13 @@
 from bs4 import BeautifulSoup
 from requests import get
 from time import sleep
-
-USER_AGENT = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36"
-}
+from user_agents import get_useragent
 
 
 def _req(term, results, lang, start, proxies):
     resp = get(
         url="https://www.google.com/search",
-        headers=USER_AGENT,
+        headers=get_useragent(),
         params=dict(
             q=term,
             num=results + 2,  # Prevents multiple requests
