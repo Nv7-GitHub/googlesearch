@@ -1,15 +1,15 @@
 from bs4 import BeautifulSoup
 from requests import get
-
-USER_AGENT = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36"
-}
+from time import sleep
+from .user_agents import get_useragent
 
 
 def _req(term, results, lang, start, proxies):
     resp = get(
         url="https://www.google.com/search",
-        headers=USER_AGENT,
+        headers={
+            "User-Agent": get_useragent()
+        },
         params=dict(
             q=term,
             num=results + 2,  # Prevents multiple requests
@@ -32,7 +32,7 @@ class SearchResult:
         return f"SearchResult(url={self.url}, title={self.title}, description={self.description})"
 
 
-def search(term, num_results=10, lang="en", proxy=None, advanced=False):
+def search(term, num_results=10, lang="en", proxy=None, advanced=False, sleep_interval=0):
     escaped_term = term.replace(" ", "+")
 
     # Proxy
@@ -65,3 +65,4 @@ def search(term, num_results=10, lang="en", proxy=None, advanced=False):
                         yield SearchResult(link["href"], title.text, description.text)
                     else:
                         yield link["href"]
+        sleep(sleep_interval)
