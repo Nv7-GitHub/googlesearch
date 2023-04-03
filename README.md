@@ -7,7 +7,7 @@ To install, run the following command:
 python3 -m pip install googlesearch-python
 ```
 
-## usage
+## Usage
 To get results for a search term, simply use the search function in googlesearch. For example, to get results for "Google" in Google, just run the following program:
 ```python
 from googlesearch import search
@@ -25,7 +25,18 @@ In addition, you can change the language google searches in. For example, to get
 from googlesearch import search
 search("Google", lang="fr")
 ```
-## googlesearch.search
+To extract more information, such as the description or the result URL, use an advanced search:
 ```python
-googlesearch.search(str: term, int: num_results=10, str: lang="en") -> list
+from googlesearch import search
+search("Google", advanced=True)
+# Returns a list of SearchResult
+# Properties:
+# - title
+# - url
+# - description
+```
+If requesting more than 100 results, googlesearch will send multiple requests to go through the pages. To increase the time between these requests, use `sleep_interval`:
+```python
+from googlesearch import search
+search("Google", sleep_interval=5, num_results=200)
 ```

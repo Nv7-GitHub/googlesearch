@@ -1,22 +1,24 @@
+"""googlesearch is a Python library for searching Google, easily."""
+from time import sleep
 from bs4 import BeautifulSoup
 from requests import get
-from time import sleep
 from .user_agents import get_useragent
 
 
-def _req(term, results, lang, start, proxies):
+def _req(term, results, lang, start, proxies, timeout):
     resp = get(
         url="https://www.google.com/search",
         headers={
             "User-Agent": get_useragent()
         },
-        params=dict(
-            q=term,
-            num=results + 2,  # Prevents multiple requests
-            hl=lang,
-            start=start,
-        ),
+        params={
+            "q": term,
+            "num": results + 2,  # Prevents multiple requests
+            "hl": lang,
+            "start": start,
+        },
         proxies=proxies,
+        timeout=timeout,
     )
     resp.raise_for_status()
     return resp
@@ -32,7 +34,9 @@ class SearchResult:
         return f"SearchResult(url={self.url}, title={self.title}, description={self.description})"
 
 
-def search(term, num_results=10, lang="en", proxy=None, advanced=False, sleep_interval=0):
+def search(term, num_results=10, lang="en", proxy=None, advanced=False, sleep_interval=0, timeout=5):
+    """Search the Google search engine"""
+
     escaped_term = term.replace(" ", "+")
 
     # Proxy
@@ -47,7 +51,8 @@ def search(term, num_results=10, lang="en", proxy=None, advanced=False, sleep_in
     start = 0
     while start < num_results:
         # Send request
-        resp = _req(escaped_term, num_results - start, lang, start, proxies)
+        resp = _req(escaped_term, num_results - start,
+                    lang, start, proxies, timeout)
 
         # Parse
         soup = BeautifulSoup(resp.text, "html.parser")
@@ -56,13 +61,14 @@ def search(term, num_results=10, lang="en", proxy=None, advanced=False, sleep_in
             # Find link, title, description
             link = result.find("a", href=True)
             title = result.find("h3")
-            description_box = result.find("div", {"style": "-webkit-line-clamp:2"})
+            description_box = result.find(
+                "div", {"style": "-webkit-line-clamp:2"})
             if description_box:
-                description = description_box.find("span")
+                description = description_box.text
                 if link and title and description:
                     start += 1
                     if advanced:
-                        yield SearchResult(link["href"], title.text, description.text)
+                        yield SearchResult(link["href"], title.text, description)
                     else:
                         yield link["href"]
         sleep(sleep_interval)
