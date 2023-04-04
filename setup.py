@@ -8,7 +8,7 @@ with open("requirements.txt", "r", encoding='UTF-8') as fh:
 
 setup(
     name="googlesearch-python",
-    version="1.2.1",
+    version="1.2.2",
     author="Nishant Vikramaditya",
     author_email="junk4Nv7@gmail.com",
     description="A Python library for scraping the Google search engine.",
@@ -23,4 +23,5 @@ setup(
     ],
     python_requires=">=3.6",
     install_requires=[requirements],
+    include_package_data=True,
 )
