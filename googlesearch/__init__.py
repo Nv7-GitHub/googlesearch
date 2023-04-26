@@ -74,5 +74,4 @@ def search(term, num_results=10, lang="en", proxy=None, advanced=False, sleep_in
         sleep(sleep_interval)
 
         if start == 0:
-            print("No result found with this search term", escaped_term)
-            break
+            return []
