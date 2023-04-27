@@ -72,3 +72,6 @@ def search(term, num_results=10, lang="en", proxy=None, advanced=False, sleep_in
                     else:
                         yield link["href"]
         sleep(sleep_interval)
+
+        if start == 0:
+            return []
