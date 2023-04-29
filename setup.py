@@ -1,10 +1,10 @@
 from setuptools import setup
 
-with open("README.md", "r", encoding='UTF-8') as fh:
+with open("README.md", "r", encoding="UTF-8") as fh:
     long_description = fh.read()
 
-with open("requirements.txt", "r", encoding='UTF-8') as fh:
-    requirements = fh.read().split("\n")
+with open("requirements.txt", "r", encoding="UTF-8") as fh:
+    requirements = fh.readlines()
 
 setup(
     name="googlesearch-python",
@@ -22,6 +22,6 @@ setup(
         "Operating System :: OS Independent",
     ],
     python_requires=">=3.6",
-    install_requires=[requirements],
+    install_requires=requirements,
     include_package_data=True,
 )
