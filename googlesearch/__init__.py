@@ -3,6 +3,7 @@ from time import sleep
 from bs4 import BeautifulSoup
 from requests import get
 from .user_agents import get_useragent
+import urllib
 
 
 def _req(term, results, lang, start, proxies, timeout):
@@ -37,7 +38,7 @@ class SearchResult:
 def search(term, num_results=10, lang="en", proxy=None, advanced=False, sleep_interval=0, timeout=5):
     """Search the Google search engine"""
 
-    escaped_term = term.replace(" ", "+")
+    escaped_term = urllib.parse.quote_plus(term) # make 'site:xxx.xxx.xxx ' works.
 
     # Proxy
     proxies = None
