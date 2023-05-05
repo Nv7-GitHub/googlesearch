@@ -58,6 +58,8 @@ def search(term, num_results=10, lang="en", proxy=None, advanced=False, sleep_in
         # Parse
         soup = BeautifulSoup(resp.text, "html.parser")
         result_block = soup.find_all("div", attrs={"class": "g"})
+        if len(result_block) ==0:
+            start += 1
         for result in result_block:
             # Find link, title, description
             link = result.find("a", href=True)
