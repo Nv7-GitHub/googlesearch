@@ -7,13 +7,20 @@ To install, run the following command:
 python3 -m pip install googlesearch-python
 ```
 
-## Usage
+## Usage via GET
 To get results for a search term, simply use the search function in googlesearch. For example, to get results for "Google" in Google, just run the following program:
 ```python
 from googlesearch import search
 search("Google")
 ```
+## Usage via POST
+To get results for a search term you can also user the POST method, which i've found can have better results, and is more reliable. For example, to get results for "Google" in Google, just run the following program:
+Currently only basic functionality. See docstring for more.
+```python
+from googlesearch import search_post
+search_post("Google")
 
+```
 ## Additional options
 googlesearch supports a few additional options. By default, googlesearch returns 10 results. This can be changed. To get a 100 results on Google for example, run the following program.
 ```python
