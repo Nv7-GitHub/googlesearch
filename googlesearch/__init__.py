@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 from requests import get
 from .user_agents import get_useragent
 import urllib
-
+import pandas as pd
 
 def _req(term, results, lang, start, proxies, timeout):
     resp = get(
@@ -24,6 +24,23 @@ def _req(term, results, lang, start, proxies, timeout):
 
     resp.raise_for_status()
     return resp
+
+def to_df(search_results):
+    data = []
+    for index, result in enumerate(search_results):
+        result_data = {
+            'index': index + 1,
+            'url': result.url,
+            'title': result.title,
+            'description': result.description
+        }
+        if hasattr(result, 'is_sponsored'):
+            result_data['is_sponsored'] = result.is_sponsored
+        data.append(result_data)
+
+    df = pd.DataFrame(data)
+
+    return df
 
 class SearchResult:
     def __init__(self, url, title, description, is_sponsored):
