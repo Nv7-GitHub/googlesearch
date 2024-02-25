@@ -54,7 +54,7 @@ def search(term, num_results=10, lang="en", proxy=None, advanced=False, sleep_in
     while start < num_results:
         # Send request
         resp = _req(escaped_term, num_results - start,
-                    lang, start, proxies, timeout)
+                    lang, start, proxies, timeout, safe)
 
         # Parse
         soup = BeautifulSoup(resp.text, "html.parser")
