@@ -6,7 +6,7 @@ from .user_agents import get_useragent
 import urllib
 
 
-def _req(term, results, lang, start, proxies, timeout):
+def _req(term, results, lang, start, proxies, timeout, safe):
     resp = get(
         url="https://www.google.com/search",
         headers={
@@ -17,6 +17,7 @@ def _req(term, results, lang, start, proxies, timeout):
             "num": results + 2,  # Prevents multiple requests
             "hl": lang,
             "start": start,
+            "safe": safe,
         },
         proxies=proxies,
         timeout=timeout,
@@ -35,7 +36,7 @@ class SearchResult:
         return f"SearchResult(url={self.url}, title={self.title}, description={self.description})"
 
 
-def search(term, num_results=10, lang="en", proxy=None, advanced=False, sleep_interval=0, timeout=5):
+def search(term, num_results=10, lang="en", proxy=None, advanced=False, sleep_interval=0, timeout=5, safe="active"):
     """Search the Google search engine"""
 
     escaped_term = urllib.parse.quote_plus(term) # make 'site:xxx.xxx.xxx ' works.
@@ -53,7 +54,7 @@ def search(term, num_results=10, lang="en", proxy=None, advanced=False, sleep_in
     while start < num_results:
         # Send request
         resp = _req(escaped_term, num_results - start,
-                    lang, start, proxies, timeout)
+                    lang, start, proxies, timeout, safe)
 
         # Parse
         soup = BeautifulSoup(resp.text, "html.parser")
