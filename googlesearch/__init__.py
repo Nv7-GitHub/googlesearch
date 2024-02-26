@@ -71,7 +71,7 @@ def search(term, num_results=10, lang="en", proxy=None, advanced=False, sleep_in
                 break  # Stop if we have fetched the desired number of results
 
         if new_results == 0:
-            #If you want to have the printed to your screen that the desired amount of queries have not been fulfilled, uncomment the line below
+            #If you want to have printed to your screen that the desired amount of queries can not been fulfilled, uncomment the line below:
             #print(f"Only {fetched_results} results found for query requiring {num_results} results. Moving on to the next query.")
             break  # Break the loop if no new results were found in this iteration
 
