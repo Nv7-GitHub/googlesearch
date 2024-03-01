@@ -46,7 +46,7 @@ from googlesearch import search
 
 proxy = 'http://API:@proxy.host.com:8080/'
 
-j = search("proxy test", num_results=100, lang="nl", proxy=proxy, SSL_VERIFY=False)
+j = search("proxy test", num_results=100, lang="en", proxy=proxy, SSL_VERIFY=False)
 for i in j:
     print(i)
 ```
