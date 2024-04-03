@@ -25,6 +25,16 @@ In addition, you can change the language google searches in. For example, to get
 from googlesearch import search
 search("Google", lang="fr")
 ```
+
+### Time-Based Search (tbs) Parameter
+You can also refine search results based on time. The tbs parameter allows you to filter results by various time ranges. For instance, to get results from the past hour, use `qdr:h`, or for results from the past year, use `qdr:y`. Here's how you can use the tbs parameter:
+```python
+from googlesearch import search
+search("Google", tbs="qdr:h")  # Results from the past hour
+search("Google", tbs="qdr:m")  # Results from the past month
+search("Google", tbs="qdr:y")  # Results from the past year
+```
+
 To extract more information, such as the description or the result URL, use an advanced search:
 ```python
 from googlesearch import search
