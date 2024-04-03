@@ -7,19 +7,20 @@ import urllib
 
 
 def _req(term, results, lang, start, tbs, proxies, timeout):
+    params={
+        "q": term,
+        "num": results + 2,  # Prevents multiple requests
+        "hl": lang,
+        "start": start,
+    }
+    if tbs is not None:
+        params["tbs"] = tbs
     resp = get(
         url="https://www.google.com/search",
         headers={
             "User-Agent": get_useragent()
         },
-        params={
-            "q": term,
-            "num": results + 2,  # Prevents multiple requests
-            "hl": lang,
-            "start": start,
-        },
-        if tbs is not None:
-            params["tbs"] = tbs
+        params=params,
         proxies=proxies,
         timeout=timeout,
     )
