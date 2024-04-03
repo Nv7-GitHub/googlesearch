@@ -27,7 +27,7 @@ search("Google", lang="fr")
 ```
 
 ### Time-Based Search (tbs) Parameter
-You can also refine search results based on time. The tbs parameter allows you to filter results by various time ranges. For instance, to get results from the past hour, use qdr:h, or for results from the past year, use qdr:y. Here's how you can use the tbs parameter:
+You can also refine search results based on time. The tbs parameter allows you to filter results by various time ranges. For instance, to get results from the past hour, use `qdr:h`, or for results from the past year, use `qdr:y`. Here's how you can use the tbs parameter:
 ```python
 from googlesearch import search
 search("Google", tbs="qdr:h")  # Results from the past hour
