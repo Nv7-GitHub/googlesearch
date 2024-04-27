@@ -6,7 +6,7 @@ from .user_agents import get_useragent
 import urllib
 
 
-def _req(term, results, lang, start, proxies, timeout, safe, SSL_VERIFY):
+def _req(term, results, lang, start, proxies, timeout, safe, ssl_verify):
     resp = get(
         url="https://www.google.com/search",
         headers={
@@ -21,7 +21,7 @@ def _req(term, results, lang, start, proxies, timeout, safe, SSL_VERIFY):
         },
         proxies=proxies,
         timeout=timeout,
-        verify=SSL_VERIFY,
+        verify=ssl_verify,
     )
     resp.raise_for_status()
     return resp
@@ -37,7 +37,7 @@ class SearchResult:
         return f"SearchResult(url={self.url}, title={self.title}, description={self.description})"
 
 
-def search(term, num_results=10, lang="en", proxy=None, advanced=False, sleep_interval=0, timeout=5, safe="active", SSL_VERIFY=None):
+def search(term, num_results=10, lang="en", proxy=None, advanced=False, sleep_interval=0, timeout=5, safe="active", ssl_verify=None):
     """Search the Google search engine"""
 
     escaped_term = urllib.parse.quote_plus(term) # make 'site:xxx.xxx.xxx ' works.
@@ -55,7 +55,7 @@ def search(term, num_results=10, lang="en", proxy=None, advanced=False, sleep_in
     while start < num_results:
         # Send request
         resp = _req(escaped_term, num_results - start,
-                    lang, start, proxies, timeout, safe, SSL_VERIFY)
+                    lang, start, proxies, timeout, safe, ssl_verify)
 
         # Parse
         soup = BeautifulSoup(resp.text, "html.parser")
