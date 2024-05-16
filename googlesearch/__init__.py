@@ -59,9 +59,6 @@ def search(
 
         # Parse
         soup = BeautifulSoup(resp.text, "html.parser")
-        with open("output.html", "w") as f:
-            f.write(resp.text)
-
         result_block = soup.find_all("div", attrs={"class": "g"})
         if len(result_block) == 0:
             print("Result block empty")
