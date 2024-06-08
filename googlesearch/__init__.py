@@ -40,15 +40,15 @@ class SearchResult:
 def search(term, num_results=10, lang="en", proxy=None, advanced=False, sleep_interval=0, timeout=5, safe="active", ssl_verify=None):
     """Search the Google search engine"""
 
-    escaped_term = urllib.parse.quote_plus(term) # make 'site:xxx.xxx.xxx ' works.
+    escaped_term = term.replace(" ", "+") # make 'site:xxx.xxx.xxx ' works.
 
     # Proxy
     proxies = None
     if proxy:
-        if proxy.startswith("https"):
-            proxies = {"https": proxy}
-        else:
-            proxies = {"http": proxy}
+        proxyies = {
+            "http":proxy,
+            "https":proxy,
+        }
 
     # Fetch
     start = 0
