@@ -45,10 +45,11 @@ def search(term, num_results=10, lang="en", proxy=None, advanced=False, sleep_in
     # Proxy
     proxies = None
     if proxy:
-        if proxy.startswith("https"):
-            proxies = {"https": proxy}
-        else:
-            proxies = {"http": proxy}
+        if proxy.startswith("http://") or proxy.startswith("https://"):
+            proxies = {
+                "https": proxy,
+                "http": proxy
+            }
 
     # Fetch
     start = 0
