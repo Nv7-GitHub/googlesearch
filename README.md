@@ -35,7 +35,6 @@ If you want to turn off the safe search function (this function is on by default
 from googlesearch import search
 search("Google", safe=None)
 ```
-If you want 
 To extract more information, such as the description or the result URL, use an advanced search:
 ```python
 from googlesearch import search
