@@ -25,6 +25,11 @@ In addition, you can change the language google searches in. For example, to get
 from googlesearch import search
 search("Google", lang="fr")
 ```
+If you want to turn off the safe search function (this function is on by default), you can do this:
+```python
+from googlesearch import search
+search("Google", safe=None)
+```
 To extract more information, such as the description or the result URL, use an advanced search:
 ```python
 from googlesearch import search
@@ -39,4 +44,15 @@ If requesting more than 100 results, googlesearch will send multiple requests to
 ```python
 from googlesearch import search
 search("Google", sleep_interval=5, num_results=200)
+```
+
+If you are using a HTTP Rotating Proxy which requires you to install their CA Certificate, you can simply add `ssl_verify=False` in the `search()` method to avoid SSL Verification.
+```python
+from googlesearch import search
+
+proxy = 'http://API:@proxy.host.com:8080/'
+
+j = search("proxy test", num_results=100, lang="en", proxy=proxy, ssl_verify=False)
+for i in j:
+    print(i)
 ```
