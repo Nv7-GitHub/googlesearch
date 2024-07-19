@@ -3,7 +3,6 @@ from time import sleep
 from bs4 import BeautifulSoup
 from requests import get
 from .user_agents import get_useragent
-import urllib
 
 
 def _req(term, results, lang, start, proxies, timeout, safe, ssl_verify):
@@ -36,24 +35,17 @@ class SearchResult:
     def __repr__(self):
         return f"SearchResult(url={self.url}, title={self.title}, description={self.description})"
 
-
 def search(term, num_results=10, lang="en", proxy=None, advanced=False, sleep_interval=0, timeout=5, safe="active", ssl_verify=None):
     """Search the Google search engine"""
+    escaped_term = term.replace(" ", "+")
 
-    escaped_term = urllib.parse.quote_plus(term) # make 'site:xxx.xxx.xxx ' works.
+    # Proxy setup
+    proxies = {"https": proxy} if proxy and proxy.startswith("https") else {"http": proxy} if proxy else None
 
-    # Proxy
-    proxies = None
-    if proxy:
-        if proxy.startswith("http://") or proxy.startswith("https://"):
-            proxies = {
-                "https": proxy,
-                "http": proxy
-            }
-
-    # Fetch
     start = 0
-    while start < num_results:
+    fetched_results = 0  # Keep track of the total fetched results
+
+    while fetched_results < num_results:
         # Send request
         resp = _req(escaped_term, num_results - start,
                     lang, start, proxies, timeout, safe, ssl_verify)
@@ -61,23 +53,30 @@ def search(term, num_results=10, lang="en", proxy=None, advanced=False, sleep_in
         # Parse
         soup = BeautifulSoup(resp.text, "html.parser")
         result_block = soup.find_all("div", attrs={"class": "g"})
-        if len(result_block) ==0:
-            start += 1
+        new_results = 0  # Keep track of new results in this iteration
+
         for result in result_block:
             # Find link, title, description
             link = result.find("a", href=True)
             title = result.find("h3")
-            description_box = result.find(
-                "div", {"style": "-webkit-line-clamp:2"})
-            if description_box:
-                description = description_box.text
-                if link and title and description:
-                    start += 1
-                    if advanced:
-                        yield SearchResult(link["href"], title.text, description)
-                    else:
-                        yield link["href"]
-        sleep(sleep_interval)
+            description_box = result.find("div", {"style": "-webkit-line-clamp:2"})
 
-        if start == 0:
-            return []
+            if link and title and description_box:
+                description = description_box.text
+                fetched_results += 1
+                new_results += 1
+                if advanced:
+                    yield SearchResult(link["href"], title.text, description)
+                else:
+                    yield link["href"]
+
+            if fetched_results >= num_results:
+                break  # Stop if we have fetched the desired number of results
+
+        if new_results == 0:
+            #If you want to have printed to your screen that the desired amount of queries can not been fulfilled, uncomment the line below:
+            #print(f"Only {fetched_results} results found for query requiring {num_results} results. Moving on to the next query.")
+            break  # Break the loop if no new results were found in this iteration
+
+        start += 10  # Prepare for the next set of results
+        sleep(sleep_interval)
