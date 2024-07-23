@@ -40,7 +40,7 @@ def search(term, num_results=10, lang="en", proxy=None, advanced=False, sleep_in
     escaped_term = term.replace(" ", "+")
 
     # Proxy setup
-    proxies = {"https": proxy} if proxy and proxy.startswith("https") else {"http": proxy} if proxy else None
+    proxies = {"https": proxy, "http": proxy} if proxy and (proxy.startswith("https") or proxy.startswith("http")) else None
 
     start = 0
     fetched_results = 0  # Keep track of the total fetched results
