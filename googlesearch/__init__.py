@@ -1,4 +1,5 @@
 """googlesearch is a Python library for searching Google, easily."""
+
 from time import sleep
 from bs4 import BeautifulSoup
 from requests import get
@@ -8,9 +9,7 @@ from .user_agents import get_useragent
 def _req(term, results, lang, start, proxies, timeout, safe, ssl_verify):
     resp = get(
         url="https://www.google.com/search",
-        headers={
-            "User-Agent": get_useragent()
-        },
+        headers={"User-Agent": get_useragent()},
         params={
             "q": term,
             "num": results + 2,  # Prevents multiple requests
@@ -35,20 +34,44 @@ class SearchResult:
     def __repr__(self):
         return f"SearchResult(url={self.url}, title={self.title}, description={self.description})"
 
-def search(term, num_results=10, lang="en", proxy=None, advanced=False, sleep_interval=0, timeout=5, safe="active", ssl_verify=None):
+
+def search(
+    term,
+    num_results=10,
+    lang="en",
+    proxy=None,
+    advanced=False,
+    sleep_interval=0,
+    timeout=5,
+    safe="active",
+    ssl_verify=None,
+    start_num=0,
+):
     """Search the Google search engine"""
     escaped_term = term.replace(" ", "+")
 
     # Proxy setup
-    proxies = {"https": proxy, "http": proxy} if proxy and (proxy.startswith("https") or proxy.startswith("http")) else None
+    proxies = (
+        {"https": proxy, "http": proxy}
+        if proxy and (proxy.startswith("https") or proxy.startswith("http"))
+        else None
+    )
 
-    start = 0
+    start = start_num
     fetched_results = 0  # Keep track of the total fetched results
 
     while fetched_results < num_results:
         # Send request
-        resp = _req(escaped_term, num_results - start,
-                    lang, start, proxies, timeout, safe, ssl_verify)
+        resp = _req(
+            escaped_term,
+            num_results - start,
+            lang,
+            start,
+            proxies,
+            timeout,
+            safe,
+            ssl_verify,
+        )
 
         # Parse
         soup = BeautifulSoup(resp.text, "html.parser")
@@ -74,8 +97,8 @@ def search(term, num_results=10, lang="en", proxy=None, advanced=False, sleep_in
                 break  # Stop if we have fetched the desired number of results
 
         if new_results == 0:
-            #If you want to have printed to your screen that the desired amount of queries can not been fulfilled, uncomment the line below:
-            #print(f"Only {fetched_results} results found for query requiring {num_results} results. Moving on to the next query.")
+            # If you want to have printed to your screen that the desired amount of queries can not been fulfilled, uncomment the line below:
+            # print(f"Only {fetched_results} results found for query requiring {num_results} results. Moving on to the next query.")
             break  # Break the loop if no new results were found in this iteration
 
         start += 10  # Prepare for the next set of results
