@@ -37,7 +37,6 @@ class SearchResult:
 
 def search(term, num_results=10, lang="en", proxy=None, advanced=False, sleep_interval=0, timeout=5, safe="active", ssl_verify=None):
     """Search the Google search engine"""
-    escaped_term = term.replace(" ", "+")
 
     # Proxy setup
     proxies = {"https": proxy, "http": proxy} if proxy and (proxy.startswith("https") or proxy.startswith("http")) else None
@@ -47,7 +46,7 @@ def search(term, num_results=10, lang="en", proxy=None, advanced=False, sleep_in
 
     while fetched_results < num_results:
         # Send request
-        resp = _req(escaped_term, num_results - start,
+        resp = _req(term, num_results - start,
                     lang, start, proxies, timeout, safe, ssl_verify)
 
         # Parse
