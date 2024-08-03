@@ -5,7 +5,7 @@ from requests import get
 from .user_agents import get_useragent
 
 
-def _req(term, results, lang, start, proxies, timeout, safe, ssl_verify):
+def _req(term, results, lang, start, proxies, timeout, safe, ssl_verify, region):
     resp = get(
         url="https://www.google.com/search",
         headers={
@@ -17,6 +17,7 @@ def _req(term, results, lang, start, proxies, timeout, safe, ssl_verify):
             "hl": lang,
             "start": start,
             "safe": safe,
+            "gl": region,
         },
         proxies=proxies,
         timeout=timeout,
@@ -35,7 +36,7 @@ class SearchResult:
     def __repr__(self):
         return f"SearchResult(url={self.url}, title={self.title}, description={self.description})"
 
-def search(term, num_results=10, lang="en", proxy=None, advanced=False, sleep_interval=0, timeout=5, safe="active", ssl_verify=None):
+def search(term, num_results=10, lang="en", proxy=None, advanced=False, sleep_interval=0, timeout=5, safe="active", ssl_verify=None, region=None):
     """Search the Google search engine"""
 
     # Proxy setup
@@ -46,8 +47,8 @@ def search(term, num_results=10, lang="en", proxy=None, advanced=False, sleep_in
 
     while fetched_results < num_results:
         # Send request
-        resp = _req(term, num_results - start,
-                    lang, start, proxies, timeout, safe, ssl_verify)
+        resp = _req(escaped_term, num_results - start,
+                    lang, start, proxies, timeout, safe, ssl_verify, region)
 
         # Parse
         soup = BeautifulSoup(resp.text, "html.parser")
