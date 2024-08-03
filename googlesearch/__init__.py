@@ -47,7 +47,7 @@ def search(term, num_results=10, lang="en", proxy=None, advanced=False, sleep_in
 
     while fetched_results < num_results:
         # Send request
-        resp = _req(escaped_term, num_results - start,
+        resp = _req(term, num_results - start,
                     lang, start, proxies, timeout, safe, ssl_verify, region)
 
         # Parse
