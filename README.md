@@ -46,6 +46,14 @@ from googlesearch import search
 search("Google", sleep_interval=5, num_results=200)
 ```
 
+```
+If requesting more than 10 results, but want to manage the batching yourself? 
+Use `start_num` to specify the start number of the results you want to get:
+```python
+from googlesearch import search
+search("Google", sleep_interval=5, num_results=200, start_result=10)
+```
+
 If you are using a HTTP Rotating Proxy which requires you to install their CA Certificate, you can simply add `ssl_verify=False` in the `search()` method to avoid SSL Verification.
 ```python
 from googlesearch import search
