@@ -25,6 +25,11 @@ In addition, you can change the language google searches in. For example, to get
 from googlesearch import search
 search("Google", lang="fr")
 ```
+You can also specify the region ([Country Codes](https://developers.google.com/custom-search/docs/json_api_reference#countryCodes)) for your search results. For example, to get results specifically from the US run the following program:
+```python
+from googlesearch import search
+search("Google", region="us")
+```
 If you want to turn off the safe search function (this function is on by default), you can do this:
 ```python
 from googlesearch import search
