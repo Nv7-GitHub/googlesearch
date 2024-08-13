@@ -36,13 +36,14 @@ class SearchResult:
     def __repr__(self):
         return f"SearchResult(url={self.url}, title={self.title}, description={self.description})"
 
-def search(term, num_results=10, lang="en", proxy=None, advanced=False, sleep_interval=0, timeout=5, safe="active", ssl_verify=None, region=None):
+
+def search(term, num_results=10, lang="en", proxy=None, advanced=False, sleep_interval=0, timeout=5, safe="active", ssl_verify=None, region=None, start_num=0):
     """Search the Google search engine"""
 
     # Proxy setup
     proxies = {"https": proxy, "http": proxy} if proxy and (proxy.startswith("https") or proxy.startswith("http")) else None
 
-    start = 0
+    start = start_num
     fetched_results = 0  # Keep track of the total fetched results
 
     while fetched_results < num_results:
