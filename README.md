@@ -20,6 +20,11 @@ googlesearch supports a few additional options. By default, googlesearch returns
 from googlesearch import search
 search("Google", num_results=100)
 ```
+If you want to have unique links in your search result, you can use the `unique` option as in the following program.
+```python
+from googlesearch import search
+search("Google", num_results=100, unique=True)
+```
 In addition, you can change the language google searches in. For example, to get results in French run the following program:
 ```python
 from googlesearch import search
