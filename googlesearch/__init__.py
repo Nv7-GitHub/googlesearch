@@ -37,7 +37,7 @@ class SearchResult:
         return f"SearchResult(url={self.url}, title={self.title}, description={self.description})"
 
 
-def search(term, num_results=10, lang="en", proxy=None, advanced=False, sleep_interval=0, timeout=5, safe="active", ssl_verify=None, region=None, start_num=0):
+def search(term, num_results=10, lang="en", proxy=None, advanced=False, sleep_interval=0, timeout=5, safe="active", ssl_verify=None, region=None, start_num=0, unique=False):
     """Search the Google search engine"""
 
     # Proxy setup
@@ -45,6 +45,7 @@ def search(term, num_results=10, lang="en", proxy=None, advanced=False, sleep_in
 
     start = start_num
     fetched_results = 0  # Keep track of the total fetched results
+    fetched_links = set() # to keep track of links that are already seen previously
 
     while fetched_results < num_results:
         # Send request
@@ -63,6 +64,10 @@ def search(term, num_results=10, lang="en", proxy=None, advanced=False, sleep_in
             description_box = result.find("div", {"style": "-webkit-line-clamp:2"})
 
             if link and title and description_box:
+                link = result.find("a", href=True)
+                if link["href"] in fetched_links and unique:
+                    continue
+                fetched_links.add(link["href"])
                 description = description_box.text
                 fetched_results += 1
                 new_results += 1
