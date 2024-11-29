@@ -5,12 +5,15 @@ from requests import get
 from .user_agents import get_useragent
 
 
-def _req(term, results, lang, start, proxies, timeout, safe, ssl_verify, region):
+def _req(term, results, lang, start, proxies, timeout, safe, ssl_verify, region,*,headers=None):
+    """If headers=none, the headers will only have a random common user agent. Use headers={} for no headers (not recommended)"""
+    if not headers: # if headers is None or unset...
+        headers={
+            "User-Agent": get_useragent() #set it to user agent
+        }
     resp = get(
         url="https://www.google.com/search",
-        headers={
-            "User-Agent": get_useragent()
-        },
+        headers=headers,
         params={
             "q": term,
             "num": results + 2,  # Prevents multiple requests
@@ -36,21 +39,21 @@ class SearchResult:
     def __repr__(self):
         return f"SearchResult(url={self.url}, title={self.title}, description={self.description})"
 
-
-def search(term, num_results=10, lang="en", proxy=None, advanced=False, sleep_interval=0, timeout=5, safe="active", ssl_verify=None, region=None, start_num=0, unique=False):
-    """Search the Google search engine"""
+def search(term, num_results=10, lang="en", proxy=None, advanced=False, sleep_interval=0, timeout=5, safe="active", ssl_verify=None, region=None,headers=None):
+    """Search the Google search engine.
+    If headers=none, the headers will only have a random common user agent. Use headers={} for no headers (not recommended).
+    >>> search("python",num_results=10,lang="en")"""
 
     # Proxy setup
     proxies = {"https": proxy, "http": proxy} if proxy and (proxy.startswith("https") or proxy.startswith("http")) else None
 
-    start = start_num
+    start = 0
     fetched_results = 0  # Keep track of the total fetched results
-    fetched_links = set() # to keep track of links that are already seen previously
 
     while fetched_results < num_results:
         # Send request
         resp = _req(term, num_results - start,
-                    lang, start, proxies, timeout, safe, ssl_verify, region)
+                    lang, start, proxies, timeout, safe, ssl_verify, region,headers=headers)
 
         # Parse
         soup = BeautifulSoup(resp.text, "html.parser")
@@ -64,10 +67,6 @@ def search(term, num_results=10, lang="en", proxy=None, advanced=False, sleep_in
             description_box = result.find("div", {"style": "-webkit-line-clamp:2"})
 
             if link and title and description_box:
-                link = result.find("a", href=True)
-                if link["href"] in fetched_links and unique:
-                    continue
-                fetched_links.add(link["href"])
                 description = description_box.text
                 fetched_results += 1
                 new_results += 1
