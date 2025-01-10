@@ -62,6 +62,9 @@ def search(term, num_results=10, lang="en", proxy=None, advanced=False, sleep_in
             link = result.find("a", href=True)
             title = result.find("h3")
             description_box = result.find("div", {"style": "-webkit-line-clamp:2"})
+            if not description_box:
+                # Page started with Wiki items should find the description here
+                description_box = result.find("div", {"style": "grid-area:nke7rc"})
 
             if link and title and description_box:
                 link = result.find("a", href=True)
