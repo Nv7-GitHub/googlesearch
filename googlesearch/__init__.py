@@ -58,9 +58,9 @@ def search(term, num_results=10, lang="en", proxy=None, advanced=False, sleep_in
         resp = _req(term, num_results - start,
                     lang, start, proxies, timeout, safe, ssl_verify, region)
         
-        # put in file 
-        with open('google.html', 'w') as f:
-            f.write(resp.text)
+        # put in file - comment for debugging purpose
+        # with open('google.html', 'w') as f:
+        #     f.write(resp.text)
         
         # Parse
         soup = BeautifulSoup(resp.text, "html.parser")
