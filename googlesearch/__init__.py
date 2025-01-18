@@ -58,6 +58,10 @@ def search(term, num_results=10, lang="en", proxy=None, advanced=False, sleep_in
         resp = _req(term, num_results - start,
                     lang, start, proxies, timeout, safe, ssl_verify, region)
         
+        # put in file 
+        with open('google.html', 'w') as f:
+            f.write(resp.text)
+        
         # Parse
         soup = BeautifulSoup(resp.text, "html.parser")
         result_block = soup.find_all("div", class_="ezO2md")
@@ -74,16 +78,16 @@ def search(term, num_results=10, lang="en", proxy=None, advanced=False, sleep_in
             # Check if all necessary tags are found
             if link_tag and title_tag and description_tag:
                 # Extract and decode the link URL
-                link = unquote(link_tag["href"].split("&")[0].replace("/url?q=", ""))
+                link = unquote(link_tag["href"].split("&")[0].replace("/url?q=", "")) if link_tag else ""
             # Check if the link has already been fetched and if unique results are required
             if link in fetched_links and unique:
                 continue  # Skip this result if the link is not unique
             # Add the link to the set of fetched links
             fetched_links.add(link)
             # Extract the title text
-            title = title_tag.text
+            title = title_tag.text if title_tag else ""
             # Extract the description text
-            description = description_tag.text
+            description = description_tag.text if description_tag else ""
             # Increment the count of fetched results
             fetched_results += 1
             # Increment the count of new results in this iteration
