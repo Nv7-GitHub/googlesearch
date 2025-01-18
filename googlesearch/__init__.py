@@ -79,6 +79,8 @@ def search(term, num_results=10, lang="en", proxy=None, advanced=False, sleep_in
             if link_tag and title_tag and description_tag:
                 # Extract and decode the link URL
                 link = unquote(link_tag["href"].split("&")[0].replace("/url?q=", "")) if link_tag else ""
+            # Extract and decode the link URL
+            link = unquote(link_tag["href"].split("&")[0].replace("/url?q=", "")) if link_tag else ""
             # Check if the link has already been fetched and if unique results are required
             if link in fetched_links and unique:
                 continue  # Skip this result if the link is not unique
