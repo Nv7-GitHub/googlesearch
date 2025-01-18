@@ -2,6 +2,7 @@
 from time import sleep
 from bs4 import BeautifulSoup
 from requests import get
+from urllib.parse import unquote # to decode the url
 from .user_agents import get_useragent
 
 
@@ -9,7 +10,8 @@ def _req(term, results, lang, start, proxies, timeout, safe, ssl_verify, region)
     resp = get(
         url="https://www.google.com/search",
         headers={
-            "User-Agent": get_useragent()
+            "User-Agent": get_useragent(),
+            "Accept": "*/*"
         },
         params={
             "q": term,
@@ -22,6 +24,10 @@ def _req(term, results, lang, start, proxies, timeout, safe, ssl_verify, region)
         proxies=proxies,
         timeout=timeout,
         verify=ssl_verify,
+        cookies = {
+            'CONSENT': 'PENDING+987', # Bypasses the consent page
+            'SOCS': 'CAESHAgBEhIaAB',
+        }
     )
     resp.raise_for_status()
     return resp
@@ -51,30 +57,42 @@ def search(term, num_results=10, lang="en", proxy=None, advanced=False, sleep_in
         # Send request
         resp = _req(term, num_results - start,
                     lang, start, proxies, timeout, safe, ssl_verify, region)
-
+        
         # Parse
         soup = BeautifulSoup(resp.text, "html.parser")
-        result_block = soup.find_all("div", attrs={"class": "g"})
+        result_block = soup.find_all("div", class_="ezO2md")
         new_results = 0  # Keep track of new results in this iteration
 
         for result in result_block:
-            # Find link, title, description
-            link = result.find("a", href=True)
-            title = result.find("h3")
-            description_box = result.find("div", {"style": "-webkit-line-clamp:2"})
+            # Find the link tag within the result block
+            link_tag = result.find("a", href=True)
+            # Find the title tag within the link tag
+            title_tag = link_tag.find("span", class_="CVA68e") if link_tag else None
+            # Find the description tag within the result block
+            description_tag = result.find("span", class_="FrIlee")
 
-            if link and title and description_box:
-                link = result.find("a", href=True)
-                if link["href"] in fetched_links and unique:
-                    continue
-                fetched_links.add(link["href"])
-                description = description_box.text
-                fetched_results += 1
-                new_results += 1
-                if advanced:
-                    yield SearchResult(link["href"], title.text, description)
-                else:
-                    yield link["href"]
+            # Check if all necessary tags are found
+            if link_tag and title_tag and description_tag:
+                # Extract and decode the link URL
+                link = unquote(link_tag["href"].split("&")[0].replace("/url?q=", ""))
+            # Check if the link has already been fetched and if unique results are required
+            if link in fetched_links and unique:
+                continue  # Skip this result if the link is not unique
+            # Add the link to the set of fetched links
+            fetched_links.add(link)
+            # Extract the title text
+            title = title_tag.text
+            # Extract the description text
+            description = description_tag.text
+            # Increment the count of fetched results
+            fetched_results += 1
+            # Increment the count of new results in this iteration
+            new_results += 1
+            # Yield the result based on the advanced flag
+            if advanced:
+                yield SearchResult(link, title, description)  # Yield a SearchResult object
+            else:
+                yield link  # Yield only the link
 
             if fetched_results >= num_results:
                 break  # Stop if we have fetched the desired number of results
