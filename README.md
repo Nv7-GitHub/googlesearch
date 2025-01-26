@@ -68,7 +68,10 @@ If you are using a HTTP Rotating Proxy which requires you to install their CA Ce
 ```python
 from googlesearch import search
 
-proxy = 'http://API:@proxy.host.com:8080/'
+
+proxy = 'http://username:password@proxy.host.com:8080/'
+# or for socks5
+# proxy = 'socks5://username:password@proxy.host.com:1080/'
 
 j = search("proxy test", num_results=100, lang="en", proxy=proxy, ssl_verify=False)
 for i in j:
