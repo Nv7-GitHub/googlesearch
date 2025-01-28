@@ -79,11 +79,11 @@ Asyncio implementations disabled the `ssl_verify` key, which is seemingly not ac
 A simple example:
 ```python
 import asyncio
-from googlesearch import search
+from googlesearch import asearch
 
 async def main():
     proxy='http://API:@proxy.host.com:8080'
-    r = search("hello world", advanced=True, proxy=proxy)
+    r = asearch("hello world", advanced=True, proxy=proxy)
     async for i in r:
         print(i)
 
