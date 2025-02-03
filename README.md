@@ -77,3 +77,18 @@ j = search("proxy test", num_results=100, lang="en", proxy=proxy, ssl_verify=Fal
 for i in j:
     print(i)
 ```
+
+Asyncio implementations disabled the `ssl_verify` key, which is seemingly not accepted by httpx.
+A simple example:
+```python
+import asyncio
+from googlesearch import asearch
+
+async def main():
+    proxy='http://API:@proxy.host.com:8080'
+    r = asearch("hello world", advanced=True, proxy=proxy)
+    async for i in r:
+        print(i)
+
+r = asyncio.run(main())
+```
