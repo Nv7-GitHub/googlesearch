@@ -47,7 +47,7 @@ def search(term, num_results=10, lang="en", proxy=None, advanced=False, sleep_in
     """Search the Google search engine"""
 
     # Proxy setup
-    proxies = {"https": proxy, "http": proxy} if proxy and (proxy.startswith("https") or proxy.startswith("http")) else None
+    proxies = {"https": proxy, "http": proxy} if proxy and (proxy.startswith("https") or proxy.startswith("http") or proxy.startswith("socks5")) else None
 
     start = start_num
     fetched_results = 0  # Keep track of the total fetched results
